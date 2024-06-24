@@ -1,0 +1,78 @@
+@extends('sb-admin/app')
+@section('title', 'Tag')
+@section('tag', 'active')
+@section('main', 'show')
+@section('main-active', 'active')
+
+@section('content')
+    {{-- flashdata --}}
+    @if (session()->has('sukses'))
+        <div class="alert alert-success" role="alert">
+            {{ session('sukses') }}
+        </div>
+    @endif
+
+    <!-- Page Heading -->
+    <h1 class="h3 mb-4 text-gray-800">Tag</h1>
+
+    <a href="/tag/create" class="btn btn-primary btn-sm"><i class="fa-solid fa-plus"></i> Tambah Tag</a>
+
+        @if ($tag[0])
+            {{-- table --}}
+            <table class="table mt-4 table-hover table-bordered">
+                <thead>
+                    <tr>
+                        <th scope="col">No</th>
+                        <th scope="col">Nama</th>
+                        <th scope="col">Slug</th>
+                        <th scope="col">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($tag as $row)
+                        <tr>
+                            <th scope="row">{{ $loop->iteration }}</th>
+                            <td>{{ $row->nama }}</td>
+                            <td>{{ $row->slug }}</td>
+                            <td width="20%">
+                                <div class="btn-group" role="group" aria-label="Basic example">
+                                    <a href="tag/{{ $row->id }}/edit" class="btn btn-primary btn-sm mr-1"><i class="fa-solid fa-edit"></i> Edit</a>
+                                    <form action="/tag/{{ $row->id }}" method="post">
+                                        @method('DELETE')
+                                        @csrf
+                                        <button onclick="return confirm('Anda yakin menghapus data?')" type="submit" class="btn btn-danger btn-sm"><i class="fa-solid fa-trash"></i> Hapus</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+            {{ $tag->links() }}
+        @else
+            @if ($session)
+                <div class="alert alert-success mt-4">
+                    {{ $session }}
+                </div>
+            @else
+                <div class="alert alert-info mt-4" role="alert">
+                    Anda belum mempunyai data
+                </div>
+            @endif
+        @endif
+
+@endsection
+
+@section('search-url', '/tag/search')
+
+@section('search')
+    @include('sb-admin/search')
+@endsection
+
+@section('search-responsive')
+    @include('sb-admin/search-responsive')
+@endsection
+
+@section('javascript')
+    @include('admin/navbar-mobile')
+@endsection
